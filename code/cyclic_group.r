@@ -1,0 +1,10 @@
+rm(list=ls())
+x= seq(100)
+a=(6*x-1)
+b=(6*x+1)
+c=c(2,3)
+d= c(2,3)
+f=sort(union(a,b)) 
+Prime=union(c,f)
+P=(Prime*2+1)
+P
