@@ -1,0 +1,20 @@
+public known:
+
+## secret to all exept the creator##
+#  	1<alice<p-1		   #
+#	1<bob<p-1		   #
+####################################
+
+######### public ############
+Ya=(g ** alice) mod n
+Yb=(g ** bob) mod n
+g=2
+##############################
+
+############# public to bob and alice #################
+K=((g ** bob)**alice) mod n=((g ** alice)**bob) mod n #
+#######################################################
+
+in the assignment because g=2 then p=2*q+1 when q=prime
+
+Z∗p = {1, 2, . . . , p − 1}.
