@@ -11,10 +11,14 @@ Yb=(g ** bob) mod n
 g=2
 ##############################
 
-############# public to bob and alice #################
-K=((g ** bob)**alice) mod n=((g ** alice)**bob) mod n #
-#######################################################
+############# public to bob and alice ########
+K=((Yb)**alice) mod n=((Ya ** bob)) mod n    #
+##############################################
 
 in the assignment because g=2 then p=2*q+1 when q=prime
 
 Z∗p = {1, 2, . . . , p − 1}.
+
+
+prime number chosen: 40, number chosen 1<x<p-1: 26, g ^ x mod p:24
+prime number chosen: 40, number chosen 1<x<p-1: 12, g ^ x mod p:16
