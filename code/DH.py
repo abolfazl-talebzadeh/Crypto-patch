@@ -1,7 +1,6 @@
 import random
 class DH:
     primes=[]
-    q_primes=[]
     p=0
     ya=0
     yb=0
@@ -10,10 +9,8 @@ class DH:
     b=0
     def __init__(self, n,g):
         self.n=n
-        #self.x=x
         self.g=g
         self.primes_gen()
-        #self.p_creator()
         self.q_assigner()
         self.g_calculator()
         return
@@ -30,9 +27,6 @@ class DH:
             if is_prime==True:
                 self.primes.append(i)
                 is_prime=False
-    #################################
-    """ def p_creator(self):
-        self.q_primes=[(2*self.primes[i])+1 for i in range (0,len(self.primes)-1)] """
     ####################################
     def q_assigner(self):
         pos=random.randint(0,len(self.primes)-1)
@@ -55,10 +49,6 @@ class DH:
         self.g=generators[random.randint(0,len(generators)-1)]
         return generators
     #####################################
-    def secret_key_generator(self):
-        
-        return
-    #####################################
     def secret_number_generattor(self):
         self.a=random.randint(1,self.p-1)
         self.ya=(self.g**self.a)%(self.p)
@@ -80,5 +70,3 @@ print("Alice's private Key= ", d.a)
 print("Alice's Publuc Key= ", d.ya)
 print("Bob's private Key= ", d.b)
 print("Alice's Publuc Key= ", d.yb)
-#print("prime number chosen: {}, number chosen 1<x<p-1: {}, {} ^ ({}) mod {}:{}".format(d.p,d.a,d.g,d.a,d.p,d.ya))
-#print("prime number chosen: {}, number chosen 1<x<p-1: {}, {} ^ ({}) mod {}:{}".format(d.p,d.b,d.g,d.b,d.p,d.yb))
