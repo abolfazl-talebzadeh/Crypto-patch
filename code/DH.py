@@ -60,6 +60,34 @@ class DH:
         else:
             return float('NaN')
     ######################################
+    def bss(self):
+        p=self.bss_random_selector()
+        q=self.bss_random_selector()
+        n=p*q
+        seed=self.a
+        key=[None]*10
+        for i in range (0,10):
+            seed=(seed**2) % n
+            key[i]=seed % 2
+        return key
+    ######################################
+    ######################################
+    def bss_random_selector(self):
+        n=random.randint(1,1024)
+        is_prime=False
+        while not is_prime:
+            for i in range(2,n):
+                if n % i==0:
+                    n+=1
+                    is_prime=False
+                    break
+                elif  n % 4 !=3:
+                    n+=1
+                    is_prime=False
+                else:
+                    is_prime=True
+        return n
+    ######################################
 d=DH(90,2)
 #print(d.primes_gen())
 print("P= ", d.p)
@@ -69,4 +97,5 @@ print("Secret Key (K):",d.secret_number_generattor())
 print("Alice's private Key= ", d.a)
 print("Alice's Publuc Key= ", d.ya)
 print("Bob's private Key= ", d.b)
-print("Alice's Publuc Key= ", d.yb)
+print("Bob's Publuc Key= ", d.yb)
+print(f"final key: {d.bss()}")
