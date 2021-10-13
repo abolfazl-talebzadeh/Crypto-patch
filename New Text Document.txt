@@ -5,7 +5,7 @@ public known:
 #	1<bob<p-1		   #
 ####################################
 
-######### public ############
+######### public ###########
 Ya=(g ** alice) mod n
 Yb=(g ** bob) mod n
 g=2
