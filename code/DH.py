@@ -1,12 +1,17 @@
 import random
+import SDES as Encryptor
 class DH:
     primes=[]
+    z=[]
+    f_k_dec=0
+    f_k_bin=''
     p=0
     ya=0
     yb=0
     k=0
     a=0
     b=0
+    q_times_p=0
     def __init__(self, n,g):
         self.n=n
         self.g=g
@@ -34,9 +39,8 @@ class DH:
     #####################################
     def g_calculator(self):
         generators=[]
-        z=[]
         for x in range(1, self.p):
-            z.append(x)
+            self.z.append(x)
         for g in self.primes:
             if g<self.p:
                 temp=[]
@@ -44,7 +48,7 @@ class DH:
                     temp.append((g**y)%self.p)
                 temp.sort()
                 temp_set=set(temp)
-                if temp_set==set(z):
+                if temp_set==set(self.z):
                     generators.append(g)
         self.g=generators[random.randint(0,len(generators)-1)]
         return generators
@@ -56,20 +60,27 @@ class DH:
         self.yb=(self.g**self.b)%(self.p)
         if (self.ya ** self.b) % (self.p) == (self.yb ** self.a) % (self.p):
             self.k=(self.ya ** self.b) % (self.p)
-            return self.k
+            return #self.k
         else:
-            return float('NaN')
+            self.k=0
+            return #float('NaN')
     ######################################
     def bss(self):
         p=self.bss_random_selector()
         q=self.bss_random_selector()
         n=p*q
+        self.q_times_p=n
         seed=self.a
         key=[None]*10
+        f_k=0
         for i in range (0,10):
             seed=(seed**2) % n
             key[i]=seed % 2
-        return key
+            f_k+=(2**(9-i))*(seed % 2)
+        self.f_k_dec=f_k
+        for h in key:
+            self.f_k_bin+=str(h)
+        return 
     ######################################
     ######################################
     def bss_random_selector(self):
@@ -88,14 +99,54 @@ class DH:
                     is_prime=True
         return n
     ######################################
-d=DH(90,2)
-#print(d.primes_gen())
-print("P= ", d.p)
-print("Generators: ",d.g_calculator())
-print("g= ",d.g, "** g is selected randomly among other numbers")
-print("Secret Key (K):",d.secret_number_generattor())
-print("Alice's private Key= ", d.a)
-print("Alice's Publuc Key= ", d.ya)
-print("Bob's private Key= ", d.b)
-print("Bob's Publuc Key= ", d.yb)
-print(f"final key: {d.bss()}")
+def select_file(i):
+    file_path={
+        1:"1.txt",
+        2:"2.txt",
+    }
+    with open(file_path.get(i)) as file:
+        data = file.read()
+    return data
+if __name__=="__main__":
+    sdes=Encryptor.SDES()
+    cipher=""
+    cipher_list=[]
+    plain=""
+    plain_list=[]
+    d=DH(90,2)
+    print("P = ", d.p,"\n")
+    print("Cyclic group = ",d.z,"\n")
+    print("Generators: ",d.g_calculator(),"\n")
+    print("g = ",d.g, "<<g is selected randomly among other numbers>>\n")
+    d.secret_number_generattor()
+    print("Alice's private Key= ", d.a)
+    print("Alice's Pub Key= ", d.ya,"\n")
+    print("Bob's private Key= ", d.b)
+    print("Bob's Pub Key= ", d.yb,"\n")
+    print(f"k(a,b)=(Alice's Pub key:{d.ya} ^ Bob's Priv key:{d.b}) mod (p:{d.p}) which equals:{d.k}\n")
+    d.bss()
+    print(f"Alice and Bob agreed on the values 'q' and 'p' which (n = q * p)={d.q_times_p}\n")
+    print(f"final key in binary: {d.f_k_bin}")
+    print(f"final key in decimal:{d.f_k_dec}")
+    
+    plain=select_file(1)
+    print(f"This is the original plain text:")
+    print(plain,"\n")
+    [plain_list.append(plain[i:i+8]) for i in range (0, len(plain)-1,8)]
+    for plain_word in plain_list: 
+        cipher+=sdes.sdes_encoder(plain_word,d.f_k_bin)
+    print(f"This is the encrypted cipher text:")
+    print(cipher,"\n")
+    with open("2.txt","w") as file:
+        file.write(cipher)
+    ##########################################################################
+    cipher_list=[]
+    cipher=""
+    plain_list=[]
+    plain=""
+    cipher=select_file(2)
+    [cipher_list.append(cipher[i:i+8]) for i in range (0, len(cipher)-1,8)]
+    for cipher_word in cipher_list: 
+        plain+=sdes.sdes_decoder(cipher_word,d.f_k_bin)
+    print(f"This is the what have decoded from the cipher text using the same key:")
+    print(f"plain: {plain}\n")
