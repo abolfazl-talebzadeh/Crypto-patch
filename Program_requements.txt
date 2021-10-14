@@ -1,0 +1,14 @@
+Your program should display the following information:
+• the cyclic group and public parameters you use;
+    - the public keys of Alice and Bob;
+    - the key Kab shared by Alice and Bob;
+    - the secret key K that will be used for encryption and decryption;
+  the parameters and keys should be in the form of either decimal or hexadecimal;
+• take input from Alice for encryption, the format for encryption can be binary/character
+  string, fles, etc,
+• take input from Bob for decryption, the format for decryption can be binary/text file;
+• show Bob can decrypt Alice's encrypted file as expected
+  namely, show Dec(Enc(INa,K),K) = INA, where INA represents Alice's input file;
+• have some kind of user interface, but not necessary GUI;
+
+Your program is
