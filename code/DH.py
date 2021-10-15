@@ -5,19 +5,15 @@ class DH:
     z=[]
     f_k_dec=0
     f_k_bin=''
-    p=0
-    ya=0
-    yb=0
-    k=0
-    a=0
-    b=0
-    q_times_p=0
-    def __init__(self, n,g):
+    p=ya=yb=k=a=b=q_times_p=p_q=0
+    def __init__(self, n):
         self.n=n
-        self.g=g
         self.primes_gen()
         self.q_assigner()
         self.g_calculator()
+        p=self.bss_random_selector()
+        q=self.bss_random_selector()
+        self.q_times_p=p*q
         return
     ##############################
     def primes_gen(self):
@@ -56,25 +52,18 @@ class DH:
     def secret_number_generattor(self):
         self.a=random.randint(1,self.p-1)
         self.ya=(self.g**self.a)%(self.p)
-        self.b=random.randint(1,self.p-1)
-        self.yb=(self.g**self.b)%(self.p)
-        if (self.ya ** self.b) % (self.p) == (self.yb ** self.a) % (self.p):
-            self.k=(self.ya ** self.b) % (self.p)
-            return #self.k
-        else:
-            self.k=0
-            return #float('NaN')
+        return
+    ########################################
+    def k_generator(self):
+        self.k=(self.yb ** self.a) % (self.p)
+        return 
     ######################################
     def bss(self):
-        p=self.bss_random_selector()
-        q=self.bss_random_selector()
-        n=p*q
-        self.q_times_p=n
-        seed=self.a
+        seed=self.k
         key=[None]*10
         f_k=0
         for i in range (0,10):
-            seed=(seed**2) % n
+            seed=(seed**2) % self.q_times_p
             key[i]=seed % 2
             f_k+=(2**(9-i))*(seed % 2)
         self.f_k_dec=f_k
@@ -99,7 +88,20 @@ class DH:
                     is_prime=True
         return n
     ######################################
-def select_file(i):
+
+""" d=DH(90)
+print("P = ", d.p,"\n")
+print("Cyclic group = ",d.z,"\n")
+print("Generators: ",d.g_calculator(),"\n")
+print("g = ",d.g, "<<g is selected randomly among other numbers>>\n")
+d.secret_number_generattor()
+print("Alice's private Key= ", d.a)
+print("Alice's Pub Key= ", d.ya,"\n")
+d.k_generator()
+d.bss()
+print(f"n={d.n}\np={d.p}\ng={d.g}\np_q={d.p_q}\nprimes={d.primes}\nq_times_p={d.q_times_p}\nya={d.ya}\nyb={d.yb}\nz={d.z}")
+print(f"bin={d.f_k_bin}\ndec={d.f_k_dec}\ng={d.g}\np_q={d.p_q}\nprimes={d.primes}\nq_times_p={d.q_times_p}\nya={d.ya}\nyb={d.yb}\nz={d.z}") """
+""" def select_file(i):
     file_path={
         1:"1.txt",
         2:"2.txt",
@@ -113,7 +115,7 @@ if __name__=="__main__":
     cipher_list=[]
     plain=""
     plain_list=[]
-    d=DH(90,2)
+    d=DH(90)
     print("P = ", d.p,"\n")
     print("Cyclic group = ",d.z,"\n")
     print("Generators: ",d.g_calculator(),"\n")
@@ -149,4 +151,4 @@ if __name__=="__main__":
     for cipher_word in cipher_list: 
         plain+=sdes.sdes_decoder(cipher_word,d.f_k_bin)
     print(f"This is the what have decoded from the cipher text using the same key:")
-    print(f"plain: {plain}\n")
+    print(f"plain: {plain}\n") """
