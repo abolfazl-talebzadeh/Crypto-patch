@@ -2,6 +2,7 @@ from flask import Flask,redirect,url_for, render_template,request
 import sys
 import requests
 import DH, SDES
+plain=""
 n=90
 enc_session={"status":False,"p":0,'z':[],"g":0,"a":0,"y":0,"k":0,"key_dec":0,"key_bin":"","p_q":0}
 home={"name":"","port":""}
@@ -28,7 +29,8 @@ def search():
     payload={'message':'connection_request','port':home["port"]}
     r=requests.post(f'http://127.0.0.1:{d_port}/connection',data=payload)
     r1=r.json()
-    return render_template('communicate.html', user=r1['name'], port=r1['port'] )
+    header=f"the user {r1['name']} is register in port {r1['port']}"
+    return render_template('communicate.html', header=header)
     
 @app.route('/connection', methods=['POST'])
 def connection():
@@ -37,6 +39,7 @@ def connection():
 
 @app.route('/message',methods=['POST'])
 def message():
+    global plain
     global n
     global d_port
     global enc_session
@@ -61,8 +64,26 @@ def message():
         enc_session['key_dec']=key.f_k_dec
         enc_session['key_bin']=key.f_k_bin
         enc_session['status']=True
-        return enc_session
-    return enc_session
+        #######################################
+        mess={'name':'amme',"message":request.form.get('message')}
+        r=requests.post(f'http://127.0.0.1:{d_port}/receive',data=mess)
+        #######################################
+        if r.status_code!=200:
+            return render_template('communicate.html',
+             header="message was not sent!",received=plain)
+        else:
+            return render_template('communicate.html',
+             header="Message was sent!",received=plain)
+    else:
+        mess={'name':'amme',"message":request.form.get('message')}
+        r=requests.post(f'http://127.0.0.1:{d_port}/receive',data=mess)
+        if r.status_code!=200:
+            return render_template('communicate.html', header="message was not sent!",
+             received=plain)
+        else:
+            return render_template('communicate.html', header="Message was sent!",
+            received=plain)
+    #return enc_session
 @app.route('/setparam',methods=["POST"])
 def setparam():
     global enc_session
@@ -85,6 +106,11 @@ def setparam():
     enc_session['key_bin']=key.f_k_bin
     enc_session['p_q']=key.q_times_p
     return {'yb':key.ya}
+@app.route('/receive', methods=['POST'])
+def receive():
+    global plain
+    plain=request.form.get('message')
+    return "received"
 if __name__ == "__main__":
     global port
     port=False

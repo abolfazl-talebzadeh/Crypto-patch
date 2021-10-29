@@ -51,7 +51,9 @@ class DH:
     #####################################
     def secret_number_generattor(self):
         self.a=random.randint(1,self.p-1)
+        self.b=random.randint(1,self.p-1)
         self.ya=(self.g**self.a)%(self.p)
+        self.yb=(self.g**self.b)%(self.p)
         return
     ########################################
     def k_generator(self):
@@ -88,20 +90,7 @@ class DH:
                     is_prime=True
         return n
     ######################################
-
-""" d=DH(90)
-print("P = ", d.p,"\n")
-print("Cyclic group = ",d.z,"\n")
-print("Generators: ",d.g_calculator(),"\n")
-print("g = ",d.g, "<<g is selected randomly among other numbers>>\n")
-d.secret_number_generattor()
-print("Alice's private Key= ", d.a)
-print("Alice's Pub Key= ", d.ya,"\n")
-d.k_generator()
-d.bss()
-print(f"n={d.n}\np={d.p}\ng={d.g}\np_q={d.p_q}\nprimes={d.primes}\nq_times_p={d.q_times_p}\nya={d.ya}\nyb={d.yb}\nz={d.z}")
-print(f"bin={d.f_k_bin}\ndec={d.f_k_dec}\ng={d.g}\np_q={d.p_q}\nprimes={d.primes}\nq_times_p={d.q_times_p}\nya={d.ya}\nyb={d.yb}\nz={d.z}") """
-""" def select_file(i):
+def select_file(i):
     file_path={
         1:"1.txt",
         2:"2.txt",
@@ -125,12 +114,12 @@ if __name__=="__main__":
     print("Alice's Pub Key= ", d.ya,"\n")
     print("Bob's private Key= ", d.b)
     print("Bob's Pub Key= ", d.yb,"\n")
+    d.k_generator()
     print(f"k(a,b)=(Alice's Pub key:{d.ya} ^ Bob's Priv key:{d.b}) mod (p:{d.p}) which equals:{d.k}\n")
     d.bss()
     print(f"Alice and Bob agreed on the values 'q' and 'p' which (n = q * p)={d.q_times_p}\n")
     print(f"final key in binary: {d.f_k_bin}")
     print(f"final key in decimal:{d.f_k_dec}")
-    
     plain=select_file(1)
     print(f"This is the original plain text:")
     print(plain,"\n")
@@ -151,4 +140,4 @@ if __name__=="__main__":
     for cipher_word in cipher_list: 
         plain+=sdes.sdes_decoder(cipher_word,d.f_k_bin)
     print(f"This is the what have decoded from the cipher text using the same key:")
-    print(f"plain: {plain}\n") """
+    print(f"plain: {plain}\n")

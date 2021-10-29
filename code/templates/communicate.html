@@ -8,12 +8,15 @@
 </head>
 <body>
     <p>
-        the user {{user}} is register in port {{port}}
+        {{header}}
     </p>
     <p>
         to send messegaes to him/het write your messege in the box below:
     </p>
     <form action="message" method="POST">
+        <p>
+            <textarea disabled name="messbox" id="" cols="30" rows="10" style="padding-left: 0%;">{{received}}</textarea>
+        </p>
         <p>
             <input type='text' name="message" id="">
         </p>
